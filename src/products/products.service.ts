@@ -88,7 +88,7 @@ export class ProductsService {
       // Borrar las imagenes anteriores
       if (images) {
         await queryRunner.manager.delete(ProductImage, { product: { id } })
-         // Insertar Nuevas Imagenes
+        // Insertar Nuevas Imagenes
         product.images = images.map((url) =>
           this.productImageRepository.create({ url: url }),
         )
@@ -124,6 +124,15 @@ export class ProductsService {
     return {
       ...rest,
       images: images.map((i) => i.url),
+    }
+  }
+
+  async deleteAllProducts() {
+    const query = this.productRepository.createQueryBuilder('product')
+    try {
+      return await query.delete().where({}).execute()
+    } catch (error) {
+      this.handleDBExpections(error)
     }
   }
 }
